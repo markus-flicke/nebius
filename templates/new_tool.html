@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Add a tool — Tool as a Service{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('index') }}">← All tools</a>
+<h1>Add a tool</h1>
+<p class="muted">
+  Implement a subclass of <code>Tool</code>. The platform reads
+  <code>name</code>, <code>description</code>, <code>inputs</code> and
+  <code>outputs</code> from your class to build the page and form.
+</p>
+
+{% if error %}
+<div class="result error" style="display:block">
+  <h3>Could not add tool</h3>
+  <pre>{{ error }}</pre>
+</div>
+{% endif %}
+
+<form method="post" action="{{ url_for('new_tool_submit') }}">
+  <div class="field">
+    <label for="code">Tool code (Python)</label>
+    <textarea id="code" name="code" rows="22" spellcheck="false">{{ code }}</textarea>
+  </div>
+
+  <div class="field">
+    <label for="conditions">Conditions under which the tool works</label>
+    <textarea id="conditions" name="conditions" rows="3"
+              placeholder="e.g. Only for Germany, cities &gt; 90k population, on Wednesdays.">{{ conditions }}</textarea>
+    <small>Free text shown to users next to the measured success rate.</small>
+  </div>
+
+  <button type="submit" class="btn primary">Submit tool</button>
+</form>
+{% endblock %}

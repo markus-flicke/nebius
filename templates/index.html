@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Tools — Tool as a Service{% endblock %}
+{% block content %}
+<section class="intro">
+  <h1>Tools</h1>
+  <p class="muted">
+    Every tool publishes the conditions under which it works and a
+    <em>measured</em> success rate computed from real runs.
+  </p>
+</section>
+
+{% if not tools %}
+  <p class="empty">No tools yet. <a href="{{ url_for('new_tool_form') }}">Add the first one →</a></p>
+{% endif %}
+
+<ul class="tool-list">
+  {% for tool in tools %}
+  <li class="tool-card">
+    <a class="tool-card-link" href="{{ url_for('tool_detail', tool_id=tool.id) }}">
+      <div class="tool-card-head">
+        <h2>{{ tool.name }}</h2>
+        {% set rate = tool.success_rate %}
+        <span class="rate {{ 'rate-high' if rate is not none and rate >= 75 else 'rate-mid' if rate is not none and rate >= 40 else 'rate-low' if rate is not none else 'rate-none' }}">
+          {% if rate is not none %}{{ rate }}%{% else %}no runs yet{% endif %}
+        </span>
+      </div>
+      <p class="tool-desc">{{ tool.description }}</p>
+      {% if tool.conditions %}
+        <p class="conditions"><strong>Works when:</strong> {{ tool.conditions }}</p>
+      {% endif %}
+      <p class="meta">
+        Inputs: {{ tool.inputs.keys() | join(', ') if tool.inputs else '—' }}
+        · {{ tool.run_count }} run{{ '' if tool.run_count == 1 else 's' }}
+      </p>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

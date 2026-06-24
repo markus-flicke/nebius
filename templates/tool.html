@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ tool.name }} — Tool as a Service{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('index') }}">← All tools</a>
+
+<section class="tool-detail">
+  <div class="tool-card-head">
+    <h1>{{ tool.name }}</h1>
+    {% set rate = tool.success_rate %}
+    <span class="rate {{ 'rate-high' if rate is not none and rate >= 75 else 'rate-mid' if rate is not none and rate >= 40 else 'rate-low' if rate is not none else 'rate-none' }}">
+      {% if rate is not none %}{{ rate }}% global{% else %}no runs yet{% endif %}
+    </span>
+  </div>
+  <p class="tool-desc">{{ tool.description }}</p>
+
+  <dl class="spec">
+    <dt>Conditions for success</dt>
+    <dd>{{ tool.conditions or 'Not specified.' }}</dd>
+    <dt>Inputs</dt>
+    <dd>
+      {% if tool.inputs %}
+        {% for name, desc in tool.inputs.items() %}<strong>{{ name }}</strong>: {{ desc }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+      {% else %}
+        None.
+      {% endif %}
+    </dd>
+    <dt>Outputs</dt>
+    <dd>{{ tool.outputs or 'Not specified.' }}</dd>
+    <dt>Success rate</dt>
+    <dd>
+      Global: {% if tool.success_rate is not none %}{{ tool.success_rate }}% over {{ tool.run_count }} run(s){% else %}no runs yet{% endif %}.
+      Yours: {% if tool.personal_success_rate is not none %}{{ tool.personal_success_rate }}% over {{ tool.personal_run_count }} run(s){% else %}no runs yet{% endif %}.
+    </dd>
+  </dl>
+</section>
+
+<section class="run-box">
+  <h2>Run this tool</h2>
+  <form id="run-form">
+    {% if tool.inputs %}
+      {% for name, desc in tool.inputs.items() %}
+      <div class="field">
+        <label for="in-{{ name }}">{{ name }}</label>
+        <input type="text" id="in-{{ name }}" name="{{ name }}" placeholder="{{ desc }}">
+        <small>{{ desc }}</small>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="muted">This tool takes no inputs.</p>
+    {% endif %}
+    <button type="submit" class="btn primary">Run</button>
+    <span id="spinner" class="spinner" hidden>● running…</span>
+  </form>
+
+  <div id="result" class="result" hidden>
+    <h3>Result</h3>
+    <pre id="result-body"></pre>
+  </div>
+</section>
+
+<script>
+const form = document.getElementById('run-form');
+const spinner = document.getElementById('spinner');
+const resultBox = document.getElementById('result');
+const resultBody = document.getElementById('result-body');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = {};
+  new FormData(form).forEach((v, k) => { data[k] = v; });
+
+  spinner.hidden = false;
+  resultBox.hidden = true;
+  resultBox.classList.remove('error', 'success');
+
+  try {
+    const resp = await fetch("{{ url_for('tool_run', tool_id=tool.id) }}", {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const json = await resp.json();
+    if (json.ok) {
+      resultBox.classList.add('success');
+      resultBody.textContent = JSON.stringify(json.result, null, 2);
+    } else {
+      resultBox.classList.add('error');
+      resultBody.textContent = json.error;
+    }
+  } catch (err) {
+    resultBox.classList.add('error');
+    resultBody.textContent = String(err);
+  } finally {
+    spinner.hidden = true;
+    resultBox.hidden = false;
+  }
+});
+</script>
+{% endblock %}

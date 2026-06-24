@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ tool.name }} — Tool as a Service{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+{% endblock %}
 {% block content %}
 <a class="back" href="{{ url_for('index') }}">← All tools</a>
 
@@ -35,7 +39,7 @@
 
   <details class="tool-code">
     <summary>View code</summary>
-    <pre><code>{{ tool.code }}</code></pre>
+    <pre><code class="language-python">{{ tool.code }}</code></pre>
   </details>
 </section>
 
@@ -64,6 +68,8 @@
 </section>
 
 <script>
+hljs.highlightAll();
+
 const form = document.getElementById('run-form');
 const spinner = document.getElementById('spinner');
 const resultBox = document.getElementById('result');

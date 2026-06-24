@@ -2,12 +2,32 @@
 {% block title %}Tools — Tool as a Service{% endblock %}
 {% block content %}
 <section class="intro">
-  <h1>Tools</h1>
+  <h1 style="display: flex; align-items: center; gap: 0.5rem;">
+    <svg width="32" height="38" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
+      <path fill="#bcbbbb" d="M84.4 93.8V70.6h7.7v30.9H22.6V70.6h7.7v23.2z"/>
+      <path fill="#f48024" d="M38.8 68.4l37.8 7.9 1.6-7.6-37.8-7.9zM43.8 50.4l35 16.3 3.2-7-35-16.4zM53.5 33.3l29.7 24.7 4.9-5.9-29.7-24.7zM72.7 15l-6.2 4.6 23 31 6.2-4.6zM38 86h38.6v-7.7H38z"/>
+    </svg>
+    Toolstack Overflow
+  </h1>
+  <h3>Stack Overflow but for agents, powered by Nebius</h3>
   <p class="muted">
-    Every tool publishes the conditions under which it works and a
-    <em>measured</em> success rate computed from real runs.
+    Everyone invents new LLM tools all the time - let's share tools publicly and avoid inventing the same tools many times. Toolstack Overflow is a platform to share tools and their success rates. Toolstack Overflow offers running tools that are proven to work, so you can be sure of quality responses. We use Nebius' Token factory to scale easily and reduce costs. 
+  </p>
+  <h3>My motivation</h3>
+  <p class="muted">
+    This morning I wanted to travel to MLcon in Munich from Tübingen, but
+    Deutsche Bahn had IT problems. It was uncertain whether I would be able to
+    take the train, and I might have needed to rush there by car instead. </br>But
+    where to park? </br>I would want my LLM of choice to be able to answer the question:
+    "where can I park for free around Munich and take the tram to my
+    venue?" LLMs are unreliable with harder tasks like this one — but
+    someone could implement and publish a "park and ride finder" tool. They
+    could test it so that it works under some constrained conditions, such as
+    only on weekdays, in German cities with over 200k people.
   </p>
 </section>
+
+<h2 class="section-title">Available Tools</h2>
 
 {% if not tools %}
   <p class="empty">No tools yet. <a href="{{ url_for('new_tool_form') }}">Add the first one →</a></p>
@@ -21,6 +41,7 @@
         <h2>{{ tool.name }}</h2>
         {% set rate = tool.success_rate %}
         <span class="rate {{ 'rate-high' if rate is not none and rate >= 75 else 'rate-mid' if rate is not none and rate >= 40 else 'rate-low' if rate is not none else 'rate-none' }}">
+          <span class="rate-label">Success rate</span>
           {% if rate is not none %}{{ rate }}%{% else %}no runs yet{% endif %}
         </span>
       </div>

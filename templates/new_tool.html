@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 {% block title %}Add a tool — Tool as a Service{% endblock %}
+{% block head %}
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<style>
+  /* Let the editor size like the textarea it replaces. */
+  .CodeMirror { height: auto; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+</style>
+{% endblock %}
 {% block content %}
 <a class="back" href="{{ url_for('index') }}">← All tools</a>
 <h1>Add a tool</h1>
@@ -31,4 +41,19 @@
 
   <button type="submit" class="btn primary">Submit tool</button>
 </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script>
+  // Turn the plain Python textarea into a syntax-highlighted editor.
+  // fromTextArea keeps the original <textarea> in sync, so the form still
+  // submits the edited code under name="code".
+  CodeMirror.fromTextArea(document.getElementById("code"), {
+    mode: "python",
+    theme: "material-darker",
+    lineNumbers: true,
+    indentUnit: 4,
+    viewportMargin: Infinity,
+  });
+</script>
 {% endblock %}

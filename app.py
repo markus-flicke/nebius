@@ -22,6 +22,10 @@ app = Flask(__name__)
 # always reflects the current tool_base contract.
 DEFAULT_TOOL_CODE = '''from tool_base import Tool
 
+# Call the LLM from your tool with get_chat_response(prompt). It returns the
+# model's reply as a string and caches repeated prompts.
+from nebius import get_chat_response
+
 
 class ReverseString(Tool):
     name = "Reverse String"
@@ -31,6 +35,8 @@ class ReverseString(Tool):
 
     def run(self, parameters):
         text = parameters["text"]
+        # Example LLM call:
+        # answer = get_chat_response("Reverse this text: " + text)
         return {"reversed": text[::-1]}
 '''
 
@@ -48,6 +54,11 @@ def current_user():
 def index():
     tools = db.list_tools()
     return render_template("index.html", tools=tools)
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 
 @app.route("/tool/<int:tool_id>")

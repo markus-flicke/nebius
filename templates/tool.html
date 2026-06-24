@@ -32,6 +32,11 @@
       Yours: {% if tool.personal_success_rate is not none %}{{ tool.personal_success_rate }}% over {{ tool.personal_run_count }} run(s){% else %}no runs yet{% endif %}.
     </dd>
   </dl>
+
+  <details class="tool-code">
+    <summary>View code</summary>
+    <pre><code>{{ tool.code }}</code></pre>
+  </details>
 </section>
 
 <section class="run-box">

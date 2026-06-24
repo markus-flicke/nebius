@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}About — Tool as a Service{% endblock %}
+{% block content %}
+<section class="intro">
+  <h1>About</h1>
+  <p class="muted">
+    A platform where every tool publishes the <strong>conditions under which
+    it works</strong> and a <strong>measured success rate</strong> computed from
+    real runs &mdash; not a declared one.
+  </p>
+</section>
+
+<section class="prose">
+  <p>
+    Most tools tell you what they <em>claim</em> to do. This platform tells you
+    what they <em>actually</em> do. Each tool lists the conditions for success
+    right next to a success rate that is computed from real executions, so the
+    number reflects reality instead of a promise.
+  </p>
+
+  <h2>How success rate is measured</h2>
+  <p>
+    Every execution is recorded with a success or failure flag. A tool's
+    success rate is simply
+    <code>successful_runs / total_runs</code>. A tool signals failure by
+    <strong>raising an exception</strong> from its <code>run()</code> method
+    &mdash; so a tool that only works on Wednesdays simply raises on other days,
+    and its measured rate honestly reflects that.
+  </p>
+  <p>
+    Both a <strong>global</strong> success rate and your own
+    <strong>personal</strong> success rate are shown. Identify yourself with
+    <code>?user=&lt;name&gt;</code> or the <code>X-User</code> header to see how
+    a tool performs for you.
+  </p>
+
+  <h2>What you can do here</h2>
+  <ul>
+    <li><strong>Browse tools</strong> with their inputs, the conditions under
+      which they work, and their measured success rate.</li>
+    <li><strong>Run a tool</strong> by filling in its inputs and watching the
+      result come back live.</li>
+    <li><strong>Add your own tool</strong> by submitting a small Python class
+      that describes its inputs, outputs, and the conditions for success.</li>
+  </ul>
+
+  <p class="muted">Built with <strong>Nebius</strong>.</p>
+</section>
+{% endblock %}
